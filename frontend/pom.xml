@@ -14,7 +14,7 @@
     <artifactId>frontend</artifactId>
     <packaging>jar</packaging>
 
-    <n>FutClub Manager Frontend</n>
+    <name>FutClub Manager Frontend</name>
     <description>JavaFX user interface</description>
 
     <dependencies>
