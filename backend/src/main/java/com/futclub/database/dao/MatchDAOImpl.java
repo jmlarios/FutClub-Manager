@@ -59,7 +59,7 @@ public class MatchDAOImpl implements MatchDAO {
             pstmt.setInt(5, match.getGoalsFor());
             pstmt.setInt(6, match.getGoalsAgainst());
             pstmt.setString(7, match.getMatchStatus());
-            pstmt.setInt(8, match.getAttendance());
+            setNullableInt(pstmt, 8, match.getAttendance());
             pstmt.setString(9, match.getWeather());
             pstmt.setString(10, match.getNotes());
             
@@ -90,7 +90,7 @@ public class MatchDAOImpl implements MatchDAO {
             pstmt.setInt(5, match.getGoalsFor());
             pstmt.setInt(6, match.getGoalsAgainst());
             pstmt.setString(7, match.getMatchStatus());
-            pstmt.setInt(8, match.getAttendance());
+            setNullableInt(pstmt, 8, match.getAttendance());
             pstmt.setString(9, match.getWeather());
             pstmt.setString(10, match.getNotes());
             pstmt.setInt(11, match.getMatchId());
@@ -201,9 +201,22 @@ public class MatchDAOImpl implements MatchDAO {
         match.setGoalsFor(rs.getInt("goals_for"));
         match.setGoalsAgainst(rs.getInt("goals_against"));
         match.setMatchStatus(rs.getString("match_status"));
-        match.setAttendance(rs.getInt("attendance"));
+        match.setAttendance(getNullableInt(rs, "attendance"));
         match.setWeather(rs.getString("weather"));
         match.setNotes(rs.getString("notes"));
         return match;
+    }
+
+    private void setNullableInt(PreparedStatement pstmt, int index, Integer value) throws SQLException {
+        if (value != null) {
+            pstmt.setInt(index, value);
+        } else {
+            pstmt.setNull(index, Types.INTEGER);
+        }
+    }
+
+    private Integer getNullableInt(ResultSet rs, String column) throws SQLException {
+        int value = rs.getInt(column);
+        return rs.wasNull() ? null : value;
     }
 }

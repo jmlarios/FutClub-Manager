@@ -48,9 +48,57 @@ public class DatabaseInitializer {
         Connection conn = DatabaseConnection.getConnection();
 
         System.out.println("Loading seed data...");
+        clearExistingData(conn);
         executeSQL(conn, SEED_DATA_FILE);
         upgradeSeedUserPasswords(conn);
         System.out.println("Seed data loaded successfully.");
+    }
+
+    private static void clearExistingData(Connection conn) throws SQLException {
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.execute("PRAGMA foreign_keys = OFF;");
+
+            String[] tables = {
+                "attendance",
+                "player_match_stats",
+                "match_events",
+                "training_sessions",
+                "matches",
+                "players",
+                "staff",
+                "users"
+            };
+
+            for (String table : tables) {
+                try {
+                    stmt.executeUpdate("DELETE FROM " + table + ";");
+                } catch (SQLException e) {
+                    if (!e.getMessage().toLowerCase().contains("no such table")) {
+                        throw e;
+                    }
+                }
+            }
+
+            try {
+                stmt.executeUpdate("DELETE FROM sqlite_sequence;");
+            } catch (SQLException e) {
+                if (!e.getMessage().toLowerCase().contains("no such table")) {
+                    throw e;
+                }
+            }
+
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.execute("PRAGMA foreign_keys = ON;");
+                } catch (SQLException e) {
+                    // Ignore inability to re-enable foreign keys; subsequent operations will fail fast.
+                }
+                stmt.close();
+            }
+        }
     }
 
     /**

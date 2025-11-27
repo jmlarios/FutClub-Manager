@@ -144,7 +144,35 @@ public class StaffDAOImpl implements StaffDAO {
         staff.setUserId(rs.getInt("user_id"));
         staff.setEmail(rs.getString("email"));
         staff.setPhone(rs.getString("phone"));
-        staff.setHireDate(rs.getDate("hire_date"));
+        staff.setHireDate(getNullableDate(rs, "hire_date"));
         return staff;
+    }
+
+    private Date getNullableDate(ResultSet rs, String column) throws SQLException {
+        String raw = rs.getString(column);
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+
+        String normalized = raw.trim();
+        if (normalized.chars().allMatch(Character::isDigit)) {
+            try {
+                long epochMillis = Long.parseLong(normalized);
+                return new Date(epochMillis);
+            } catch (NumberFormatException ex) {
+                throw new SQLException("Failed to parse epoch millis '" + raw + "' for column " + column, ex);
+            }
+        }
+
+        int spaceIdx = normalized.indexOf(' ');
+        if (spaceIdx > 0) {
+            normalized = normalized.substring(0, spaceIdx);
+        }
+
+        try {
+            return Date.valueOf(normalized);
+        } catch (IllegalArgumentException ex) {
+            throw new SQLException("Failed to parse date value '" + raw + "' for column " + column, ex);
+        }
     }
 }

@@ -13,13 +13,14 @@ class DatabaseIntegrationTest extends BaseDAOTest {
     
     @Test
     void testInsertPlayer() throws Exception {
-        String sql = "INSERT INTO players (first_name, last_name, position, shirt_number, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO players (first_name, last_name, date_of_birth, position, shirt_number, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, "Test");
             pstmt.setString(2, "Player");
-            pstmt.setString(3, "ST");
-            pstmt.setInt(4, 99);
-            pstmt.setString(5, "AVAILABLE");
+            pstmt.setDate(3, java.sql.Date.valueOf("1995-01-01"));
+            pstmt.setString(4, "ST");
+            pstmt.setInt(5, 99);
+            pstmt.setString(6, "AVAILABLE");
             
             int rowsAffected = pstmt.executeUpdate();
             assertEquals(1, rowsAffected, "Should insert 1 row");
@@ -38,14 +39,15 @@ class DatabaseIntegrationTest extends BaseDAOTest {
     @Test
     void testUpdatePlayer() throws Exception {
         // First insert a player
-        String insertSql = "INSERT INTO players (first_name, last_name, position, shirt_number, status) VALUES (?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO players (first_name, last_name, date_of_birth, position, shirt_number, status) VALUES (?, ?, ?, ?, ?, ?)";
         int playerId;
         try (PreparedStatement pstmt = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, "Update");
             pstmt.setString(2, "Test");
-            pstmt.setString(3, "GK");
-            pstmt.setInt(4, 88);
-            pstmt.setString(5, "AVAILABLE");
+            pstmt.setDate(3, java.sql.Date.valueOf("1994-05-10"));
+            pstmt.setString(4, "GK");
+            pstmt.setInt(5, 88);
+            pstmt.setString(6, "AVAILABLE");
             pstmt.executeUpdate();
             
             ResultSet keys = pstmt.getGeneratedKeys();
@@ -75,14 +77,15 @@ class DatabaseIntegrationTest extends BaseDAOTest {
     @Test
     void testDeletePlayer() throws Exception {
         // First insert a player
-        String insertSql = "INSERT INTO players (first_name, last_name, position, shirt_number, status) VALUES (?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO players (first_name, last_name, date_of_birth, position, shirt_number, status) VALUES (?, ?, ?, ?, ?, ?)";
         int playerId;
         try (PreparedStatement pstmt = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, "Delete");
             pstmt.setString(2, "Test");
-            pstmt.setString(3, "CB");
-            pstmt.setInt(4, 77);
-            pstmt.setString(5, "AVAILABLE");
+            pstmt.setDate(3, java.sql.Date.valueOf("1993-03-15"));
+            pstmt.setString(4, "CB");
+            pstmt.setInt(5, 77);
+            pstmt.setString(6, "AVAILABLE");
             pstmt.executeUpdate();
             
             ResultSet keys = pstmt.getGeneratedKeys();
@@ -125,15 +128,16 @@ class DatabaseIntegrationTest extends BaseDAOTest {
     @Test
     void testUniqueConstraint() throws Exception {
         // Try to insert two players with same shirt number
-        String sql = "INSERT INTO players (first_name, last_name, position, shirt_number, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO players (first_name, last_name, date_of_birth, position, shirt_number, status) VALUES (?, ?, ?, ?, ?, ?)";
         
         // First insert
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, "Player");
             pstmt.setString(2, "One");
-            pstmt.setString(3, "ST");
-            pstmt.setInt(4, 66);
-            pstmt.setString(5, "AVAILABLE");
+            pstmt.setDate(3, java.sql.Date.valueOf("1992-02-02"));
+            pstmt.setString(4, "ST");
+            pstmt.setInt(5, 66);
+            pstmt.setString(6, "AVAILABLE");
             pstmt.executeUpdate();
         }
         
@@ -142,9 +146,10 @@ class DatabaseIntegrationTest extends BaseDAOTest {
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setString(1, "Player");
                 pstmt.setString(2, "Two");
-                pstmt.setString(3, "GK");
-                pstmt.setInt(4, 66); // Same shirt number
-                pstmt.setString(5, "AVAILABLE");
+                pstmt.setDate(3, java.sql.Date.valueOf("1996-06-06"));
+                pstmt.setString(4, "GK");
+                pstmt.setInt(5, 66); // Same shirt number
+                pstmt.setString(6, "AVAILABLE");
                 pstmt.executeUpdate();
             }
         }, "Should throw exception for unique constraint violation");
@@ -156,13 +161,14 @@ class DatabaseIntegrationTest extends BaseDAOTest {
         
         try {
             // Insert a player
-            String sql = "INSERT INTO players (first_name, last_name, position, shirt_number, status) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO players (first_name, last_name, date_of_birth, position, shirt_number, status) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setString(1, "Rollback");
                 pstmt.setString(2, "Test");
-                pstmt.setString(3, "CM");
-                pstmt.setInt(4, 55);
-                pstmt.setString(5, "AVAILABLE");
+                pstmt.setDate(3, java.sql.Date.valueOf("1991-04-04"));
+                pstmt.setString(4, "CM");
+                pstmt.setInt(5, 55);
+                pstmt.setString(6, "AVAILABLE");
                 pstmt.executeUpdate();
             }
             
@@ -187,13 +193,14 @@ class DatabaseIntegrationTest extends BaseDAOTest {
         
         try {
             // Insert a player
-            String sql = "INSERT INTO players (first_name, last_name, position, shirt_number, status) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO players (first_name, last_name, date_of_birth, position, shirt_number, status) VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 pstmt.setString(1, "Commit");
                 pstmt.setString(2, "Test");
-                pstmt.setString(3, "LW");
-                pstmt.setInt(4, 44);
-                pstmt.setString(5, "AVAILABLE");
+                pstmt.setDate(3, java.sql.Date.valueOf("1990-08-08"));
+                pstmt.setString(4, "LW");
+                pstmt.setInt(5, 44);
+                pstmt.setString(6, "AVAILABLE");
                 pstmt.executeUpdate();
             }
             
