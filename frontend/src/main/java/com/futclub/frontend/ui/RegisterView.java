@@ -1,5 +1,7 @@
 package com.futclub.frontend.ui;
 
+import com.futclub.frontend.backend.RegistrationResult;
+import com.futclub.model.enums.UserRole;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,8 +10,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import java.util.Locale;
 
 public class RegisterView {
 
@@ -89,21 +93,50 @@ public class RegisterView {
             String role = roleBox.getValue();
 
             if (name.isEmpty() || user.isEmpty() || pass.isEmpty() || confirm.isEmpty() || role == null) {
-                errorLabel.setText("Please fill in all fields.");
+                showError(errorLabel, "Please fill in all fields.");
                 return;
             }
             if (!pass.equals(confirm)) {
-                errorLabel.setText("Passwords do not match.");
+                showError(errorLabel, "Passwords do not match.");
                 return;
             }
 
-            // TODO: save user via backend
-            errorLabel.setText("");
+            UserRole roleEnum;
+            try {
+                roleEnum = UserRole.valueOf(role.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ex) {
+                showError(errorLabel, "Unsupported role selected.");
+                return;
+            }
+
+            RegistrationResult result = mainApp.getBackendFacade().register(name, user, pass, roleEnum);
+            if (!result.success()) {
+                showError(errorLabel, result.message());
+                return;
+            }
+
+            clearMessage(errorLabel);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Registration successful");
+            alert.setHeaderText("Welcome to FutClub Manager");
+            alert.setContentText("Account created successfully. You can now log in.");
+            alert.showAndWait();
             mainApp.showLoginView();
         });
 
         backButton.setOnAction(e -> mainApp.showLoginView());
 
         return new javafx.scene.Scene(root, 480, 560);
+    }
+
+    private void showError(Label label, String message) {
+        if (!label.getStyleClass().contains("error-label")) {
+            label.getStyleClass().add("error-label");
+        }
+        label.setText(message);
+    }
+
+    private void clearMessage(Label label) {
+        label.setText("");
     }
 }

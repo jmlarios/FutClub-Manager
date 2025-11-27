@@ -1,5 +1,6 @@
 package com.futclub.frontend.ui;
 
+import com.futclub.frontend.backend.LoginResult;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -64,16 +65,33 @@ public class LoginView {
             String pass = passwordField.getText();
 
             if (user.isEmpty() || pass.isEmpty()) {
-                errorLabel.setText("Please fill in both fields.");
+                ensureErrorLabel(errorLabel, "Please fill in both fields.");
                 return;
             }
 
-            errorLabel.setText("");
-            mainApp.showHomeView(user);
+            LoginResult result = mainApp.getBackendFacade().login(user, pass);
+            if (!result.success()) {
+                ensureErrorLabel(errorLabel, result.message());
+                return;
+            }
+
+            clearMessage(errorLabel);
+            mainApp.handleLogin(result);
         });
 
         registerLink.setOnAction(e -> mainApp.showRegisterView());
 
         return new javafx.scene.Scene(root, 420, 520);
+    }
+
+    private void ensureErrorLabel(Label label, String message) {
+        if (!label.getStyleClass().contains("error-label")) {
+            label.getStyleClass().add("error-label");
+        }
+        label.setText(message);
+    }
+
+    private void clearMessage(Label label) {
+        label.setText("");
     }
 }
