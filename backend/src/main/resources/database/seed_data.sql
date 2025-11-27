@@ -184,6 +184,17 @@ INSERT INTO player_match_stats (player_id, match_id, minutes_played, goals, assi
 (15, 3, 90, 0, 0, 7.5, 2, 1, 32, 38, 0, 0, 1); -- João Félix
 
 -- ============================================================================
+-- MATCH EVENTS - Sample timeline entries for completed matches
+-- ============================================================================
+INSERT INTO match_events (match_id, player_id, event_type, minute, second, description) VALUES
+(1, 9, 'GOAL', 23, 12, 'Gavi finishes low into the corner after a through ball'),
+(1, 12, 'GOAL', 78, 4, 'Lewandowski converts a penalty to put the team ahead'),
+(1, 7, 'YELLOW_CARD', 54, 19, 'João Cancelo booked for a tactical foul'),
+(2, 10, 'GOAL', 67, 45, 'Pedri levels the match with a curled effort from the edge'),
+(3, 4, 'GOAL', 12, 8, 'Ronald Araújo scores a towering header from a corner'),
+(3, NULL, 'SUBSTITUTION', 60, 0, 'Raphinha replaced by Ferran Torres to stretch the pitch');
+
+-- ============================================================================
 -- VERIFICATION QUERIES
 -- ============================================================================
 -- Uncomment to verify data insertion:
