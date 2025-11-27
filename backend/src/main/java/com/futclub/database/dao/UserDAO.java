@@ -1,6 +1,7 @@
 package com.futclub.database.dao;
 
 import com.futclub.model.User;
+import com.futclub.model.enums.UserRole;
 import java.util.List;
 
 public interface UserDAO {
@@ -11,7 +12,7 @@ public interface UserDAO {
     void delete(int userId);
     
     User getByUsername(String username);
-    List<User> getByRole(String role);
-    boolean authenticate(String username, String passwordHash);
+    List<User> getByRole(UserRole role);
+    boolean authenticate(String username, String plainPassword);
     void updateLastLogin(int userId);
 }

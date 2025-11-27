@@ -1,13 +1,15 @@
 package com.futclub.database;
 
+import com.futclub.security.PasswordHasher;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * Initializes the database by creating tables.
@@ -16,6 +18,11 @@ public class DatabaseInitializer {
 
     private static final String SCHEMA_FILE = "/database/schema.sql";
     private static final String SEED_DATA_FILE = "/database/seed_data.sql";
+    private static final Map<String, String> DEFAULT_SEED_PASSWORDS = Map.of(
+        "coach.smith", "password123",
+        "analyst.jones", "password123",
+        "admin.wilson", "password123"
+    );
 
     /**
      * Initializes the database by creating all tables.
@@ -42,6 +49,7 @@ public class DatabaseInitializer {
 
         System.out.println("Loading seed data...");
         executeSQL(conn, SEED_DATA_FILE);
+        upgradeSeedUserPasswords(conn);
         System.out.println("Seed data loaded successfully.");
     }
 
@@ -139,6 +147,18 @@ public class DatabaseInitializer {
 
         } catch (Exception e) {
             throw new SQLException("Error executing SQL from " + resourcePath, e);
+        }
+    }
+
+    private static void upgradeSeedUserPasswords(Connection conn) throws SQLException {
+        String sql = "UPDATE users SET password_hash = ? WHERE username = ? AND password_hash LIKE 'hashed_password_%'";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            for (Map.Entry<String, String> entry : DEFAULT_SEED_PASSWORDS.entrySet()) {
+                pstmt.setString(1, PasswordHasher.hash(entry.getValue()));
+                pstmt.setString(2, entry.getKey());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
         }
     }
 

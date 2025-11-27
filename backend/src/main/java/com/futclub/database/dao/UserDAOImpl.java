@@ -1,7 +1,12 @@
 package com.futclub.database.dao;
 
 import com.futclub.database.DatabaseConnection;
+import com.futclub.model.AdministratorUser;
+import com.futclub.model.AnalystUser;
+import com.futclub.model.CoachUser;
 import com.futclub.model.User;
+import com.futclub.model.enums.UserRole;
+import com.futclub.security.PasswordHasher;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +58,7 @@ public class UserDAOImpl implements UserDAO {
             
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPasswordHash());
-            pstmt.setString(3, user.getRole());
+            pstmt.setString(3, user.getRole().toDatabaseValue());
             pstmt.setBoolean(4, user.isActive());
             
             pstmt.executeUpdate();
@@ -76,7 +81,7 @@ public class UserDAOImpl implements UserDAO {
             
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getPasswordHash());
-            pstmt.setString(3, user.getRole());
+            pstmt.setString(3, user.getRole().toDatabaseValue());
             pstmt.setBoolean(4, user.isActive());
             pstmt.setInt(5, user.getUserId());
             
@@ -118,14 +123,14 @@ public class UserDAOImpl implements UserDAO {
     }
     
     @Override
-    public List<User> getByRole(String role) {
+    public List<User> getByRole(UserRole role) {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE role = ? ORDER BY username";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
-            pstmt.setString(1, role);
+            pstmt.setString(1, role.toDatabaseValue());
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
@@ -138,20 +143,12 @@ public class UserDAOImpl implements UserDAO {
     }
     
     @Override
-    public boolean authenticate(String username, String passwordHash) {
-        String sql = "SELECT user_id FROM users WHERE username = ? AND password_hash = ? AND is_active = 1";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, username);
-            pstmt.setString(2, passwordHash);
-            ResultSet rs = pstmt.executeQuery();
-            
-            return rs.next();
-        } catch (SQLException e) {
-            System.err.println("Error authenticating user: " + e.getMessage());
+    public boolean authenticate(String username, String plainPassword) {
+        User user = getByUsername(username);
+        if (user == null || !user.isActive()) {
             return false;
         }
+        return PasswordHasher.matches(plainPassword, user.getPasswordHash());
     }
     
     @Override
@@ -168,14 +165,23 @@ public class UserDAOImpl implements UserDAO {
     }
     
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
+        UserRole role = UserRole.fromDatabaseValue(rs.getString("role"));
+        User user = instantiateUser(role);
         user.setUserId(rs.getInt("user_id"));
         user.setUsername(rs.getString("username"));
         user.setPasswordHash(rs.getString("password_hash"));
-        user.setRole(rs.getString("role"));
+        user.setRole(role);
         user.setCreatedAt(rs.getTimestamp("created_at"));
         user.setLastLogin(rs.getTimestamp("last_login"));
         user.setActive(rs.getBoolean("is_active"));
         return user;
+    }
+
+    private User instantiateUser(UserRole role) {
+        return switch (role) {
+            case COACH -> new CoachUser();
+            case ANALYST -> new AnalystUser();
+            case ADMINISTRATOR -> new AdministratorUser();
+        };
     }
 }

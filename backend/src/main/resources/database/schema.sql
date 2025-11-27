@@ -175,6 +175,26 @@ CREATE INDEX IF NOT EXISTS idx_stats_match ON player_match_stats(match_id);
 CREATE INDEX IF NOT EXISTS idx_stats_rating ON player_match_stats(rating);
 
 -- ============================================================================
+-- TABLE: match_events
+-- Stores detailed chronological events logged during a match
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS match_events (
+    event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    match_id INTEGER NOT NULL,
+    player_id INTEGER,
+    event_type TEXT NOT NULL,
+    minute INTEGER NOT NULL CHECK(minute BETWEEN 0 AND 130),
+    second INTEGER DEFAULT 0 CHECK(second BETWEEN 0 AND 59),
+    description TEXT,
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE,
+    FOREIGN KEY (player_id) REFERENCES players(player_id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_match_events_match ON match_events(match_id);
+CREATE INDEX IF NOT EXISTS idx_match_events_type ON match_events(event_type);
+
+-- ============================================================================
 -- VIEWS - Useful pre-defined queries
 -- ============================================================================
 
