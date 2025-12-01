@@ -3,6 +3,7 @@ package com.futclub.database.dao;
 import com.futclub.database.DatabaseConnection;
 import com.futclub.model.Match;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,14 +118,30 @@ public class MatchDAOImpl implements MatchDAO {
     @Override
     public List<Match> getUpcomingMatches() {
         List<Match> matches = new ArrayList<>();
-        String sql = "SELECT * FROM matches WHERE match_status = 'SCHEDULED' AND match_date >= datetime('now') ORDER BY match_date";
+        String sql = "SELECT * FROM matches ORDER BY match_date";
+        LocalDate today = LocalDate.now();
         
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             
             while (rs.next()) {
-                matches.add(extractMatchFromResultSet(rs));
+                Match match = extractMatchFromResultSet(rs);
+                Timestamp matchDate = match.getMatchDate();
+                String status = match.getMatchStatus();
+                if (status == null || !status.trim().equalsIgnoreCase("SCHEDULED")) {
+                    continue;
+                }
+
+                if (matchDate == null) {
+                    matches.add(match);
+                    continue;
+                }
+
+                LocalDate matchDay = matchDate.toLocalDateTime().toLocalDate();
+                if (!matchDay.isBefore(today)) {
+                    matches.add(match);
+                }
             }
         } catch (SQLException e) {
             System.err.println("Error getting upcoming matches: " + e.getMessage());
