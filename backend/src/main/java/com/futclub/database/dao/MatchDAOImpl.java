@@ -63,7 +63,8 @@ public class MatchDAOImpl implements MatchDAO {
             pstmt.setString(9, match.getWeather());
             pstmt.setString(10, match.getNotes());
             
-            pstmt.executeUpdate();
+            int updated = pstmt.executeUpdate();
+            System.out.println("Match update executed for match_id=" + match.getMatchId() + "; rowsAffected=" + updated);
             
             ResultSet generatedKeys = pstmt.getGeneratedKeys();
             if (generatedKeys.next()) {

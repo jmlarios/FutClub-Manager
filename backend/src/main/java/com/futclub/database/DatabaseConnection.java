@@ -1,5 +1,6 @@
 package com.futclub.database;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,6 +29,15 @@ public class DatabaseConnection {
 
                 // Enable foreign keys
                 connection.createStatement().execute("PRAGMA foreign_keys = ON;");
+
+                // Log resolved DB path to help diagnosing multiple DB files issue
+                try {
+                    File dbFile = new File("data/futclub.db");
+                    System.out.println("Using database file: " + dbFile.getAbsolutePath());
+                    System.out.println("JDBC URL: " + DB_URL);
+                } catch (Exception ex) {
+                    System.out.println("Could not resolve DB file path: " + ex.getMessage());
+                }
 
                 System.out.println("Database connection established successfully.");
 
