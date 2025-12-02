@@ -15,6 +15,9 @@ public abstract class BaseDAOTest {
 
     @BeforeEach
     public void setUp() throws SQLException {
+        // Reset connection before each test
+        DatabaseConnection.closeConnection();
+
         // Initialize test database
         DatabaseInitializer.initializeDatabase();
         DatabaseInitializer.loadSeedData();
@@ -27,6 +30,9 @@ public abstract class BaseDAOTest {
         if (connection != null && !connection.isClosed()) {
             connection.close();
         }
+
+        // Reset singleton connection for next test
+        DatabaseConnection.closeConnection();
     }
 
     /**
