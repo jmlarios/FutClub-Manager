@@ -27,6 +27,13 @@
         <junit.version>5.10.1</junit.version>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencyManagement>
         <dependencies>
             <!-- SQLite JDBC Driver -->
@@ -69,6 +76,11 @@
                         <source>17</source>
                         <target>17</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-maven-plugin</artifactId>
+                    <version>0.0.8</version>
                 </plugin>
             </plugins>
         </pluginManagement>

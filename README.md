@@ -42,7 +42,7 @@ FutClub-Manager/
 
 2. **Launch the JavaFX application** (from repo root):
 	```bash
-	mvn -pl frontend -am -DskipTests javafx:run
+	mvn -f frontend/pom.xml -DskipTests javafx:run
 	```
 
 3. **Frontend-only rebuild** (after UI changes):

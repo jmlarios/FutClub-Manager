@@ -61,25 +61,25 @@ INSERT INTO matches (match_date, opponent, venue, competition, goals_for, goals_
 ('2024-11-05 16:00:00', 'Valencia CF', 'HOME', 'La Liga', 2, 0, 'COMPLETED', 80000),
 
 -- Upcoming matches
-('2024-11-27 21:00:00', 'Atlético Madrid', 'AWAY', 'La Liga', 0, 0, 'SCHEDULED', NULL),
-('2024-12-01 18:45:00', 'Inter Milan', 'AWAY', 'Champions League', 0, 0, 'SCHEDULED', NULL),
-('2024-12-08 21:00:00', 'Real Betis', 'HOME', 'La Liga', 0, 0, 'SCHEDULED', NULL),
-('2024-12-15 16:00:00', 'Girona FC', 'AWAY', 'La Liga', 0, 0, 'SCHEDULED', NULL);
+('2025-12-05 21:00:00', 'Atlético Madrid', 'AWAY', 'La Liga', 0, 0, 'SCHEDULED', NULL),
+('2025-12-10 18:45:00', 'Inter Milan', 'AWAY', 'Champions League', 0, 0, 'SCHEDULED', NULL),
+('2025-12-15 21:00:00', 'Real Betis', 'HOME', 'La Liga', 0, 0, 'SCHEDULED', NULL),
+('2025-12-22 16:00:00', 'Girona FC', 'AWAY', 'La Liga', 0, 0, 'SCHEDULED', NULL);
 
 -- ============================================================================
 -- TRAINING SESSIONS - Sample training schedule
 -- ============================================================================
 INSERT INTO training_sessions (session_date, focus, location, duration_minutes, intensity, coach_id) VALUES
 -- Past sessions
-('2024-11-18 10:00:00', 'Tactical Training - Possession', 'Main Training Ground', 90, 'MEDIUM', 1),
-('2024-11-19 10:00:00', 'Physical Conditioning', 'Main Training Ground', 75, 'HIGH', 1),
-('2024-11-20 10:00:00', 'Set Pieces Practice', 'Main Training Ground', 60, 'LOW', 1),
-('2024-11-21 10:00:00', 'Match Preparation', 'Main Training Ground', 90, 'MEDIUM', 1),
-('2024-11-22 10:00:00', 'Recovery Session', 'Indoor Facility', 45, 'LOW', 1),
+('2025-11-24 10:00:00', 'Tactical Training - Possession', 'Main Training Ground', 90, 'MEDIUM', 1),
+('2025-11-25 10:00:00', 'Physical Conditioning', 'Main Training Ground', 75, 'HIGH', 1),
+('2025-11-26 10:00:00', 'Set Pieces Practice', 'Main Training Ground', 60, 'LOW', 1),
+('2025-11-27 10:00:00', 'Match Preparation', 'Main Training Ground', 90, 'MEDIUM', 1),
+('2025-11-28 10:00:00', 'Recovery Session', 'Indoor Facility', 45, 'LOW', 1),
 
 -- Future sessions
-('2024-11-26 10:00:00', 'Team Tactics', 'Main Training Ground', 90, 'MEDIUM', 1),
-('2024-11-27 09:00:00', 'Pre-Match Activation', 'Main Training Ground', 45, 'LOW', 1);
+('2025-12-02 10:00:00', 'Team Tactics', 'Main Training Ground', 90, 'MEDIUM', 1),
+('2025-12-04 09:00:00', 'Pre-Match Activation', 'Main Training Ground', 45, 'LOW', 1);
 
 -- ============================================================================
 -- ATTENDANCE - Sample attendance records for past training sessions
