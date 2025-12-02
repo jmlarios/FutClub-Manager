@@ -7,7 +7,7 @@ Club operations suite built with a Java 17 Maven multi-module stack. The **backe
 - Player management: registration, updates, roster overview
 - Match workflow: schedule fixtures, log in-game events, view timelines
 - Training operations for coaches: create sessions, review personal schedule
-- Analyst tooling: match event capture and player performance stats entry
+- Analyst tooling: match event capture, player performance stats entry, and top scorers/rated players view
 - Dashboard snapshot summarizing squad, fixtures, and sessions
 
 ## Tech Stack
@@ -19,7 +19,7 @@ Club operations suite built with a Java 17 Maven multi-module stack. The **backe
 ## Prerequisites
 1. **JDK 17** on your PATH (`java -version` should report 17.x).
 2. **Apache Maven 3.9+** (`mvn -version`).
-3. No extra database install is required—the app creates `frontend/data/futclub.db` automatically.
+3. No extra database install is required—the app creates `futclub.db` automatically in the working directory on first run.
 
 ## Project Layout
 ```
@@ -28,9 +28,8 @@ FutClub-Manager/
 ├── backend/                 # DAO + service layer (jar)
 │   └── src/main/java/...    # Database + service code
 ├── frontend/                # JavaFX UI module (jar)
-│   ├── src/main/java/...    # UI + backend facade
-│   └── data/futclub.db      # SQLite file generated at runtime
-└── DATABASE_README.md       # Extended DB documentation
+│   └── src/main/java/...    # UI + backend facade
+└── futclub.db              # SQLite file (created in working directory at runtime)
 ```
 
 ## Building & Running
@@ -61,7 +60,7 @@ FutClub-Manager/
   - `admin.wilson / password123`
   - `coach.smith / password123`
   - `analyst.jones / password123`
-- The SQLite file is stored under `frontend/data/futclub.db`; delete it to reset the environment.
+- The SQLite file (`futclub.db`) is created in the working directory on first run; delete it to reset the environment.
 
 ## Use-Case Diagram
 Render the PlantUML snippet below (e.g., https://www.plantuml.com/plantuml/). It captures the primary actors and their supported actions within FutClub Manager.
