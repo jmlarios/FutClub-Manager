@@ -269,11 +269,15 @@ public class HomeView {
         recordStats.getStyleClass().add("primary-button");
         recordStats.setOnAction(e -> showRecordPlayerStatsDialog());
 
+        Button viewStats = new Button("View player stats");
+        viewStats.getStyleClass().add("primary-button");
+        viewStats.setOnAction(e -> showViewPlayerStatsDialog());
+
         Button viewTimeline = new Button("View match timeline");
         viewTimeline.getStyleClass().add("primary-button");
         viewTimeline.setOnAction(e -> showMatchTimelineDialog());
 
-        VBox container = new VBox(10, header, logEvent, recordStats, viewTimeline);
+        VBox container = new VBox(10, header, logEvent, recordStats, viewStats, viewTimeline);
         container.setAlignment(Pos.TOP_LEFT);
         container.setPadding(new Insets(12));
         container.getStyleClass().add("role-actions");
@@ -971,6 +975,73 @@ public class HomeView {
         String date = session.getSessionDate().toLocalDateTime().format(DATE_TIME_FORMATTER);
         String detail = session.getFocus() != null ? session.getFocus() : "Training";
         return date + " • " + detail;
+    }
+
+    private void showViewPlayerStatsDialog() {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("View player stats");
+        dialog.setHeaderText("Choose what stats to view");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = createFormGrid();
+        ComboBox<String> viewBox = new ComboBox<>(FXCollections.observableArrayList(
+                "Top scorers", "Top rated players"
+        ));
+        viewBox.setValue("Top scorers");
+        grid.addRow(0, new Label("View"), viewBox);
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(button -> button == ButtonType.OK ? viewBox.getValue() : null);
+
+        Optional<String> selection = dialog.showAndWait();
+        selection.ifPresent(viewType -> {
+            List<PlayerMatchStats> stats;
+            String title;
+
+            if ("Top scorers".equals(viewType)) {
+                stats = mainApp.getBackendFacade().getTopScorers(user);
+                title = "Top 10 Scorers";
+            } else {
+                stats = mainApp.getBackendFacade().getTopRatedPlayers(user);
+                title = "Top 10 Rated Players";
+            }
+
+            if (stats.isEmpty()) {
+                showAlert(AlertType.INFORMATION, title, "No player statistics available yet.");
+                return;
+            }
+
+            StringBuilder content = new StringBuilder();
+            content.append("┌─────────────────────────────────┬──────┬────────┬──────────┐\n");
+            content.append(String.format("│ %-31s │ Goal │ Rating │ Matches  │\n", "Player"));
+            content.append("├─────────────────────────────────┼──────┼────────┼──────────┤\n");
+
+            List<Player> allPlayers = mainApp.getBackendFacade().listPlayers(user);
+            for (PlayerMatchStats stat : stats) {
+                Player player = allPlayers.stream()
+                        .filter(p -> p.getPlayerId() == stat.getPlayerId())
+                        .findFirst()
+                        .orElse(null);
+
+                String playerName = player != null
+                        ? (player.getFirstName() != null ? player.getFirstName() : "") + " " +
+                          (player.getLastName() != null ? player.getLastName() : "")
+                        : "Unknown Player";
+                playerName = playerName.trim();
+                if (playerName.isEmpty()) {
+                    playerName = "Player #" + stat.getPlayerId();
+                }
+
+                Integer goals = stat.getGoals();
+                if (goals == null) goals = 0;
+                Double rating = stat.getRating();
+                if (rating == null) rating = 0.0;
+                content.append(String.format("│ %-31s │ %4d │ %6.1f │ %8d │\n", playerName, goals, rating, 1));
+            }
+            content.append("└─────────────────────────────────┴──────┴────────┴──────────┘\n");
+
+            showInfoDialog(title, "Top performers", content.toString());
+        });
     }
 }
 

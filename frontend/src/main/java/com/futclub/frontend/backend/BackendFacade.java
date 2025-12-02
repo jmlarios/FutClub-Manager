@@ -225,6 +225,34 @@ public class BackendFacade {
         return context.analystService().getTimelineForMatch(analystUser, matchId);
     }
 
+    public List<PlayerMatchStats> getTopScorers(User user) {
+        if (user == null) {
+            return List.of();
+        }
+        return context.playerMatchStatsDAO().getTopScorers(10);
+    }
+
+    public List<PlayerMatchStats> getTopRatedPlayers(User user) {
+        if (user == null) {
+            return List.of();
+        }
+        return context.playerMatchStatsDAO().getTopRatedPlayers(10);
+    }
+
+    public List<PlayerMatchStats> getPlayerStats(User user, int playerId) {
+        if (user == null) {
+            return List.of();
+        }
+        return context.playerMatchStatsDAO().getByPlayerId(playerId);
+    }
+
+    public List<PlayerMatchStats> getMatchStats(User user, int matchId) {
+        if (user == null) {
+            return List.of();
+        }
+        return context.playerMatchStatsDAO().getByMatchId(matchId);
+    }
+
     private List<TrainingSession> resolveSessionsSource(User user) {
         if (user instanceof CoachUser coachUser) {
             CoachService coachService = context.coachService();

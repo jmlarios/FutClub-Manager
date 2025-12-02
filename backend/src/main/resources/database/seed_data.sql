@@ -148,12 +148,12 @@ INSERT INTO player_match_stats (player_id, match_id, minutes_played, goals, assi
 (6, 1, 90, 0, 1, 8.2, 0, 0, 48, 52, 2, 1, 1),  -- Balde
 (7, 1, 90, 0, 0, 7.5, 1, 1, 52, 60, 3, 2, 1),  -- Cancelo
 (8, 1, 85, 0, 0, 8.5, 2, 1, 78, 85, 1, 2, 1),  -- de Jong
-(9, 1, 90, 1, 0, 8.8, 3, 2, 62, 68, 2, 1, 1),  -- Gavi (GOAL)
+(9, 1, 90, 2, 0, 8.8, 3, 2, 62, 68, 2, 1, 1),  -- Gavi (2 GOALS)
 (10, 1, 75, 0, 1, 8.0, 1, 1, 71, 76, 0, 1, 1), -- Pedri
-(12, 1, 90, 1, 0, 9.0, 4, 3, 45, 52, 1, 0, 1), -- Lewandowski (GOAL)
-(13, 1, 90, 0, 0, 7.2, 2, 1, 38, 45, 0, 0, 1), -- Raphinha
+(12, 1, 90, 4, 0, 9.0, 4, 3, 45, 52, 1, 0, 1), -- Lewandowski (4 GOALS)
+(13, 1, 90, 1, 0, 7.2, 2, 1, 38, 45, 0, 0, 1), -- Raphinha
 (15, 1, 15, 0, 0, 6.5, 0, 0, 8, 10, 0, 0, 0),  -- João Félix (sub)
-(11, 1, 15, 0, 0, 6.8, 1, 0, 12, 14, 1, 0, 0); -- Gündoğan (sub)
+(11, 1, 15, 1, 0, 6.8, 1, 0, 12, 14, 1, 0, 0); -- Gündoğan (sub)
 
 -- Match 2: vs Sevilla (1-1 draw)
 INSERT INTO player_match_stats (player_id, match_id, minutes_played, goals, assists, rating, shots, shots_on_target, passes_completed, passes_attempted, tackles, interceptions, was_starter) VALUES
@@ -163,24 +163,24 @@ INSERT INTO player_match_stats (player_id, match_id, minutes_played, goals, assi
 (6, 2, 90, 0, 0, 7.2, 1, 0, 45, 51, 3, 2, 1),  -- Balde
 (7, 2, 90, 0, 1, 7.5, 2, 1, 48, 58, 2, 1, 1),  -- Cancelo
 (8, 2, 90, 0, 0, 7.8, 1, 0, 72, 81, 2, 3, 1),  -- de Jong
-(9, 2, 90, 0, 0, 7.0, 1, 1, 58, 65, 1, 0, 1),  -- Gavi
-(10, 2, 90, 1, 0, 7.5, 2, 2, 65, 72, 0, 1, 1), -- Pedri (GOAL)
-(12, 2, 90, 0, 0, 6.5, 3, 1, 35, 42, 0, 0, 1), -- Lewandowski
-(13, 2, 90, 0, 0, 6.8, 2, 0, 32, 41, 1, 0, 1), -- Raphinha
+(9, 2, 90, 1, 0, 7.0, 1, 1, 58, 65, 1, 0, 1),  -- Gavi
+(10, 2, 90, 2, 0, 7.5, 2, 2, 65, 72, 0, 1, 1), -- Pedri (2 GOALS)
+(12, 2, 90, 3, 0, 6.5, 3, 1, 35, 42, 0, 0, 1), -- Lewandowski (3 GOALS)
+(13, 2, 90, 1, 0, 6.8, 2, 0, 32, 41, 1, 0, 1), -- Raphinha
 (15, 2, 90, 0, 0, 7.0, 1, 0, 28, 35, 0, 0, 1); -- João Félix
 
 -- Match 3: vs Bayern Munich (3-0 win)
 INSERT INTO player_match_stats (player_id, match_id, minutes_played, goals, assists, rating, shots, shots_on_target, passes_completed, passes_attempted, tackles, interceptions, was_starter) VALUES
 (1, 3, 90, 0, 0, 8.5, 0, 0, 28, 30, 0, 0, 1),  -- ter Stegen
-(4, 3, 90, 1, 0, 8.8, 2, 1, 68, 74, 4, 4, 1),  -- Koundé (GOAL)
+(4, 3, 90, 2, 0, 8.8, 2, 1, 68, 74, 4, 4, 1),  -- Koundé (2 GOALS)
 (5, 3, 90, 0, 0, 8.2, 0, 0, 62, 68, 5, 3, 1),  -- Christensen
 (6, 3, 90, 0, 1, 8.5, 1, 0, 52, 58, 2, 2, 1),  -- Balde
 (7, 3, 90, 0, 1, 8.0, 1, 1, 58, 65, 3, 1, 1),  -- Cancelo
 (8, 3, 90, 0, 0, 9.0, 1, 1, 85, 90, 2, 3, 1),  -- de Jong
-(9, 3, 90, 1, 1, 9.2, 3, 2, 68, 74, 3, 1, 1),  -- Gavi (GOAL + ASSIST)
-(10, 3, 90, 0, 0, 8.8, 2, 1, 78, 82, 1, 2, 1), -- Pedri
-(12, 3, 90, 1, 0, 9.5, 5, 4, 42, 48, 0, 0, 1), -- Lewandowski (GOAL)
-(13, 3, 90, 0, 0, 7.8, 3, 2, 40, 48, 1, 0, 1), -- Raphinha
+(9, 3, 90, 3, 1, 9.2, 3, 2, 68, 74, 3, 1, 1),  -- Gavi (3 GOALS + ASSIST)
+(10, 3, 90, 1, 0, 8.8, 2, 1, 78, 82, 1, 2, 1), -- Pedri (1 GOAL)
+(12, 3, 90, 5, 0, 9.5, 5, 4, 42, 48, 0, 0, 1), -- Lewandowski (5 GOALS)
+(13, 3, 90, 2, 0, 7.8, 3, 2, 40, 48, 1, 0, 1), -- Raphinha (2 GOALS)
 (15, 3, 90, 0, 0, 7.5, 2, 1, 32, 38, 0, 0, 1); -- João Félix
 
 -- ============================================================================
